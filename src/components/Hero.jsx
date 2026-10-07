@@ -39,12 +39,12 @@ export default function Hero({ onOpenBooking, onSelectVehicle }) {
 
             {/* Main Headline */}
             <h1 className="text-3xl sm:text-5xl xl:text-6xl font-black tracking-tight leading-tight text-white">
-              Bus Service in Zirakpur | Bus Hire & <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500">Hire Luxury Bus in Zirakpur</span>
+              Bus Service in Zirakpur | Bus Hire & <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500">Hire Luxury Bus in Chandigarh</span>
             </h1>
 
             {/* Subheadline */}
             <p className="text-base sm:text-lg text-slate-200 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
-              Looking for reliable <strong>bus service in zirakpur</strong> or <strong>bus hire in zirakpur</strong>? Hire luxury bus in zirakpur according to seating capacity — <strong>27, 30, 35, 40, 45, 50, 55, and 60 Seater Deluxe AC Buses</strong> & Luxury Tempo Travellers with mountain expert drivers.
+              Looking for reliable <strong>bus service in zirakpur</strong> or <strong>bus hire in zirakpur</strong>? Hire luxury bus in chandigarh according to seating capacity — <strong>27, 30, 35, 40, 45, 50, 55, and 60 Seater Deluxe AC Buses</strong> & Luxury Tempo Travellers with mountain expert drivers.
             </p>
 
             {/* Key Bullet Highlights */}

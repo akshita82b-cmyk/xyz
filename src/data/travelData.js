@@ -449,8 +449,8 @@ export const TESTIMONIALS = [
 
 export const FAQS = [
   {
-    question: "How do I book a Bus Service in Zirakpur & Hire Luxury Bus in Zirakpur?",
-    answer: "You can book a Bus Service in Zirakpur or Hire Luxury Bus in Zirakpur with Bharat Bus Service by calling +91 9814276846 or sending a WhatsApp message with your passenger count, travel date, and destination. We provide instant booking confirmation for 27, 30, 35, 40, 45, 50, 55, and 60 Seater Deluxe AC Buses."
+    question: "How do I book a Bus Service in Zirakpur & Hire Luxury Bus in Chandigarh?",
+    answer: "You can book a Bus Service in Zirakpur or Hire Luxury Bus in Chandigarh with Bharat Bus Service by calling +91 9814276846 or sending a WhatsApp message with your passenger count, travel date, and destination. We provide instant booking confirmation for 27, 30, 35, 40, 45, 50, 55, and 60 Seater Deluxe AC Buses."
   },
   {
     question: "What is the tariff per KM for Bus Hire in Zirakpur according to seating capacity?",
