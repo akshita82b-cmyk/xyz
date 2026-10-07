@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
-import { Phone, MessageCircle, Menu, X, MapPin, Clock, Award, ChevronDown, ChevronRight } from 'lucide-react';
-import { COMPANY_INFO } from '../data/travelData';
+import { Phone, MessageCircle, Menu, X, MapPin, Clock, Award, ChevronDown, ChevronRight, Lock } from 'lucide-react';
+import { useTravelData } from '../context/TravelDataContext';
+import { COMPANY_INFO as DEFAULT_COMPANY } from '../data/travelData';
 
 export default function Header({ activePage, activeId, onNavigate, onOpenBooking }) {
+  const { companyInfo } = useTravelData();
+  const currentCompany = companyInfo || DEFAULT_COMPANY;
+  const COMPANY_INFO = currentCompany;
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null); // 'tempo' | 'urbania' | 'taxis' | 'buses' | 'tours' | null
   const [mobileAccordion, setMobileAccordion] = useState(null); // 'tempo' | 'urbania' | 'taxis' | 'buses' | 'tours' | null

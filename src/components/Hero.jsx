@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 import { ShieldCheck, Star, Calendar, Users, MapPin, ArrowRight, MessageCircle, Sparkles, CheckCircle2 } from 'lucide-react';
-import { COMPANY_INFO, FLEET_CATALOG } from '../data/travelData';
+import { useTravelData } from '../context/TravelDataContext';
+import { COMPANY_INFO as DEFAULT_COMPANY, FLEET_CATALOG as DEFAULT_FLEET } from '../data/travelData';
 
 export default function Hero({ onOpenBooking, onSelectVehicle }) {
+  const { fleet, companyInfo } = useTravelData();
+  const allFleet = fleet || DEFAULT_FLEET;
+  const currentCompany = companyInfo || DEFAULT_COMPANY;
+
   const [vehicle, setVehicle] = useState('12-seater');
   const [destination, setDestination] = useState('Manali');
   const [days, setDays] = useState('4');
 
   const handleHeroSubmit = (e) => {
     e.preventDefault();
-    const selectedObj = FLEET_CATALOG.find(f => f.id === vehicle) || FLEET_CATALOG[1];
+    const selectedObj = allFleet.find(f => f.id === vehicle) || allFleet[1] || allFleet[0];
     onSelectVehicle(selectedObj, { destination, days });
   };
 
@@ -145,7 +150,7 @@ export default function Hero({ onOpenBooking, onSelectVehicle }) {
                     onChange={(e) => setVehicle(e.target.value)}
                     className="w-full bg-slate-50 text-slate-900 border border-slate-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-500 transition font-semibold"
                   >
-                    {FLEET_CATALOG.map((f) => (
+                    {allFleet.map((f) => (
                       <option key={f.id} value={f.id}>
                         {f.name} ({f.ratePerKm}/KM)
                       </option>

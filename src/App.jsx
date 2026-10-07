@@ -5,10 +5,12 @@ import FleetPage from './pages/FleetPage';
 import FleetDetailPage from './pages/FleetDetailPage';
 import ToursPage from './pages/ToursPage';
 import TourDetailPage from './pages/TourDetailPage';
+import AdminPage from './pages/AdminPage';
 import FareCalculator from './components/FareCalculator';
 import Footer from './components/Footer';
 import BookingModal from './components/BookingModal';
 import StickyMobileBar from './components/StickyMobileBar';
+import { TravelDataProvider } from './context/TravelDataContext';
 
 export default function App() {
   const [route, setRoute] = useState({ page: 'home', id: null });
@@ -22,6 +24,9 @@ export default function App() {
     const hash = window.location.hash.replace(/^#\/?/, '');
     const parts = hash.split('/');
 
+    if (parts[0] === 'admin') {
+      return { page: 'admin', id: null };
+    }
     if (parts[0] === 'fleet' && parts[1]) {
       return { page: 'fleet-detail', id: parts[1] };
     }
@@ -83,85 +88,91 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-amber-500 selection:text-slate-950">
-      
-      {/* Header */}
-      <Header
-        activePage={route.page}
-        activeId={route.id}
-        onNavigate={(path) => navigateTo(path)}
-        onOpenBooking={() => handleOpenBooking()}
-      />
-
-      {/* Main Multi-Page Views mapped to dedicated URLs */}
-      <main>
-        {route.page === 'home' && (
-          <HomePage
-            onOpenBooking={() => handleOpenBooking()}
-            onSelectVehicle={handleHeroSelectVehicle}
-            onSelectPackage={(pkg) => handleOpenBooking(null, pkg)}
+    <TravelDataProvider>
+      {route.page === 'admin' ? (
+        <AdminPage onNavigateHome={() => navigateTo('/')} />
+      ) : (
+        <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-amber-500 selection:text-slate-950">
+          
+          {/* Header */}
+          <Header
+            activePage={route.page}
+            activeId={route.id}
             onNavigate={(path) => navigateTo(path)}
-          />
-        )}
-
-        {route.page === 'fleet' && (
-          <FleetPage
-            onSelectVehicle={(v) => handleOpenBooking(v)}
-            onViewDetail={(id) => navigateTo(`/fleet/${id}`)}
             onOpenBooking={() => handleOpenBooking()}
           />
-        )}
 
-        {route.page === 'fleet-detail' && (
-          <FleetDetailPage
-            vehicleId={route.id}
-            onBack={() => navigateTo('/fleet')}
-            onOpenBooking={(v) => handleOpenBooking(v)}
+          {/* Main Multi-Page Views mapped to dedicated URLs */}
+          <main>
+            {route.page === 'home' && (
+              <HomePage
+                onOpenBooking={() => handleOpenBooking()}
+                onSelectVehicle={handleHeroSelectVehicle}
+                onSelectPackage={(pkg) => handleOpenBooking(null, pkg)}
+                onNavigate={(path) => navigateTo(path)}
+              />
+            )}
+
+            {route.page === 'fleet' && (
+              <FleetPage
+                onSelectVehicle={(v) => handleOpenBooking(v)}
+                onViewDetail={(id) => navigateTo(`/fleet/${id}`)}
+                onOpenBooking={() => handleOpenBooking()}
+              />
+            )}
+
+            {route.page === 'fleet-detail' && (
+              <FleetDetailPage
+                vehicleId={route.id}
+                onBack={() => navigateTo('/fleet')}
+                onOpenBooking={(v) => handleOpenBooking(v)}
+              />
+            )}
+
+            {route.page === 'tours' && (
+              <ToursPage
+                onSelectPackage={(pkg) => handleOpenBooking(null, pkg)}
+                onViewDetail={(id) => navigateTo(`/tours/${id}`)}
+              />
+            )}
+
+            {route.page === 'tour-detail' && (
+              <TourDetailPage
+                packageId={route.id}
+                onBack={() => navigateTo('/tours')}
+                onOpenBooking={(pkg) => handleOpenBooking(null, pkg)}
+              />
+            )}
+
+            {route.page === 'calculator' && (
+              <div className="py-8 bg-slate-50 min-h-screen">
+                <FareCalculator onOpenBooking={(v) => handleOpenBooking(v)} />
+              </div>
+            )}
+          </main>
+
+          {/* Footer */}
+          <Footer onOpenBooking={() => handleOpenBooking()} onNavigate={(path) => navigateTo(path)} />
+
+          {/* Booking Popup Modal */}
+          <BookingModal
+            isOpen={bookingModalOpen}
+            onClose={() => {
+              setBookingModalOpen(false);
+              setSelectedVehicle(null);
+              setSelectedPackage(null);
+              setSearchParams(null);
+            }}
+            initialVehicle={selectedVehicle}
+            initialPackage={selectedPackage}
+            initialSearch={searchParams}
           />
-        )}
 
-        {route.page === 'tours' && (
-          <ToursPage
-            onSelectPackage={(pkg) => handleOpenBooking(null, pkg)}
-            onViewDetail={(id) => navigateTo(`/tours/${id}`)}
-          />
-        )}
+          {/* Sticky Bottom Bar for Mobile */}
+          <StickyMobileBar onOpenBooking={() => handleOpenBooking()} />
 
-        {route.page === 'tour-detail' && (
-          <TourDetailPage
-            packageId={route.id}
-            onBack={() => navigateTo('/tours')}
-            onOpenBooking={(pkg) => handleOpenBooking(null, pkg)}
-          />
-        )}
-
-        {route.page === 'calculator' && (
-          <div className="py-8 bg-slate-50 min-h-screen">
-            <FareCalculator onOpenBooking={(v) => handleOpenBooking(v)} />
-          </div>
-        )}
-      </main>
-
-      {/* Footer */}
-      <Footer onOpenBooking={() => handleOpenBooking()} onNavigate={(path) => navigateTo(path)} />
-
-      {/* Booking Popup Modal */}
-      <BookingModal
-        isOpen={bookingModalOpen}
-        onClose={() => {
-          setBookingModalOpen(false);
-          setSelectedVehicle(null);
-          setSelectedPackage(null);
-          setSearchParams(null);
-        }}
-        initialVehicle={selectedVehicle}
-        initialPackage={selectedPackage}
-        initialSearch={searchParams}
-      />
-
-      {/* Sticky Bottom Bar for Mobile */}
-      <StickyMobileBar onOpenBooking={() => handleOpenBooking()} />
-
-    </div>
+        </div>
+      )}
+    </TravelDataProvider>
   );
 }

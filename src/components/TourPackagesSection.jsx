@@ -1,8 +1,12 @@
 import React from 'react';
 import { Compass, Clock, MapPin, CheckCircle, ChevronRight, Info } from 'lucide-react';
-import { TOUR_PACKAGES } from '../data/travelData';
+import { useTravelData } from '../context/TravelDataContext';
+import { TOUR_PACKAGES as DEFAULT_PACKAGES } from '../data/travelData';
 
 export default function TourPackagesSection({ onSelectPackage, onViewDetail }) {
+  const { packages } = useTravelData();
+  const displayPackages = packages || DEFAULT_PACKAGES;
+
   return (
     <section id="tours" className="py-10 sm:py-12 bg-white text-slate-900 relative border-t border-slate-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -22,7 +26,7 @@ export default function TourPackagesSection({ onSelectPackage, onViewDetail }) {
 
         {/* Tour Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {TOUR_PACKAGES.map((pkg) => (
+          {displayPackages.map((pkg) => (
             <div
               key={pkg.id}
               className="bg-slate-50 rounded-3xl overflow-hidden border border-slate-200 hover:border-amber-400 transition duration-300 shadow-md hover:shadow-xl flex flex-col group"

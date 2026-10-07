@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Users, Check, ShieldCheck, Phone, MessageCircle, Zap, Info, Calendar, MapPin } from 'lucide-react';
-import { FLEET_CATALOG, COMPANY_INFO } from '../data/travelData';
+import { useTravelData } from '../context/TravelDataContext';
+import { FLEET_CATALOG as DEFAULT_FLEET, COMPANY_INFO as DEFAULT_COMPANY } from '../data/travelData';
 
 export default function FleetDetailPage({ vehicleId, onBack, onOpenBooking }) {
-  const vehicle = FLEET_CATALOG.find(f => f.id === vehicleId) || FLEET_CATALOG[0];
+  const { fleet, companyInfo } = useTravelData();
+  const allFleet = fleet || DEFAULT_FLEET;
+  const currentCompany = companyInfo || DEFAULT_COMPANY;
+  const vehicle = allFleet.find(f => f.id === vehicleId) || allFleet[0];
 
   const [travelDate, setTravelDate] = useState('');
   const [destination, setDestination] = useState('Manali');
@@ -13,11 +17,11 @@ export default function FleetDetailPage({ vehicleId, onBack, onOpenBooking }) {
 
   const handleBookingSubmit = (e) => {
     e.preventDefault();
-    const text = `Hi Bharat Bus Service In Zirakpur,\nI want to book from the Vehicle Detail Page:\n\n• Vehicle: ${vehicle.name} (${vehicle.ratePerKm}/KM)\n• Name: ${name}\n• Phone: ${phone}\n• Destination: ${destination}\n• Travel Date: ${travelDate}\n• Duration: ${days} Days\n\nPlease confirm availability!`;
-    window.open(`https://wa.me/${COMPANY_INFO.phoneRaw}?text=${encodeURIComponent(text)}`, '_blank');
+    const text = `Hi ${currentCompany.name},\nI want to book from the Vehicle Detail Page:\n\n• Vehicle: ${vehicle.name} (${vehicle.ratePerKm}/KM)\n• Name: ${name}\n• Phone: ${phone}\n• Destination: ${destination}\n• Travel Date: ${travelDate}\n• Duration: ${days} Days\n\nPlease confirm availability!`;
+    window.open(`https://wa.me/${currentCompany.phoneRaw}?text=${encodeURIComponent(text)}`, '_blank');
   };
 
-  const otherVehicles = FLEET_CATALOG.filter(f => f.id !== vehicle.id).slice(0, 3);
+  const otherVehicles = allFleet.filter(f => f.id !== vehicle.id).slice(0, 3);
 
   return (
     <div className="bg-slate-50 text-slate-900 min-h-screen py-10">

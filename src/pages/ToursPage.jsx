@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { Compass, Clock, MapPin, CheckCircle, ChevronRight, Info } from 'lucide-react';
-import { TOUR_PACKAGES } from '../data/travelData';
+import { useTravelData } from '../context/TravelDataContext';
+import { TOUR_PACKAGES as DEFAULT_PACKAGES } from '../data/travelData';
 
 export default function ToursPage({ onSelectPackage, onViewDetail }) {
+  const { packages } = useTravelData();
+  const allPackages = packages || DEFAULT_PACKAGES;
   const [filterTag, setFilterTag] = useState('all');
 
   const tourCategories = [
@@ -14,8 +17,8 @@ export default function ToursPage({ onSelectPackage, onViewDetail }) {
   ];
 
   const filteredPackages = filterTag === 'all'
-    ? TOUR_PACKAGES
-    : TOUR_PACKAGES.filter(p => {
+    ? allPackages
+    : allPackages.filter(p => {
         if (filterTag === 'hill') return p.id.includes('dharamshala') || p.id.includes('dalhousie');
         if (filterTag === 'pilgrimage') return p.id.includes('chardham') || p.id.includes('amarnath');
         if (filterTag === 'heritage') return p.id.includes('rajasthan') || p.id.includes('amritsar');

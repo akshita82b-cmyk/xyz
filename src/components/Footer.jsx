@@ -1,8 +1,14 @@
 import React from 'react';
-import { Phone, MessageCircle, MapPin, Award, ArrowUp } from 'lucide-react';
-import { COMPANY_INFO, FLEET_CATALOG, TOUR_PACKAGES } from '../data/travelData';
+import { Phone, MessageCircle, MapPin, Award, ArrowUp, Lock } from 'lucide-react';
+import { useTravelData } from '../context/TravelDataContext';
+import { COMPANY_INFO as DEFAULT_COMPANY, FLEET_CATALOG as DEFAULT_FLEET, TOUR_PACKAGES as DEFAULT_PACKAGES } from '../data/travelData';
 
 export default function Footer({ onOpenBooking, onNavigate }) {
+  const { companyInfo, fleet, packages } = useTravelData();
+  const currentCompany = companyInfo || DEFAULT_COMPANY;
+  const currentFleet = fleet || DEFAULT_FLEET;
+  const currentPackages = packages || DEFAULT_PACKAGES;
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -59,7 +65,7 @@ export default function Footer({ onOpenBooking, onNavigate }) {
               Tempo & Bus Rental Rates
             </h4>
             <ul className="space-y-2">
-              {FLEET_CATALOG.slice(0, 6).map((f) => (
+              {currentFleet.slice(0, 6).map((f) => (
                 <li key={f.id}>
                   <button
                     onClick={() => onNavigate(`/fleet/${f.id}`)}
@@ -79,7 +85,7 @@ export default function Footer({ onOpenBooking, onNavigate }) {
               Popular Tour Packages
             </h4>
             <ul className="space-y-2">
-              {TOUR_PACKAGES.map((t) => (
+              {currentPackages.map((t) => (
                 <li key={t.id}>
                   <button
                     onClick={() => onNavigate(`/tours/${t.id}`)}
@@ -100,19 +106,19 @@ export default function Footer({ onOpenBooking, onNavigate }) {
             
             <p className="text-slate-300 leading-relaxed">
               <MapPin className="w-3.5 h-3.5 text-amber-400 inline mr-1" />
-              {COMPANY_INFO.address}, {COMPANY_INFO.city} - {COMPANY_INFO.pincode}
+              {currentCompany.address}, {currentCompany.city} - {currentCompany.pincode}
             </p>
 
             <div className="pt-2 space-y-2">
               <a
-                href={`tel:${COMPANY_INFO.phoneRaw}`}
+                href={`tel:${currentCompany.phoneRaw}`}
                 className="flex items-center gap-2 text-amber-400 font-bold text-sm hover:underline"
               >
-                <Phone className="w-4 h-4" /> {COMPANY_INFO.phone}
+                <Phone className="w-4 h-4" /> {currentCompany.phone}
               </a>
 
               <a
-                href={`https://wa.me/${COMPANY_INFO.phoneRaw}`}
+                href={`https://wa.me/${currentCompany.phoneRaw}`}
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-2 text-emerald-400 font-bold text-xs hover:underline"
@@ -131,10 +137,19 @@ export default function Footer({ onOpenBooking, onNavigate }) {
 
         </div>
 
-        {/* Bottom copyright */}
+        {/* Bottom copyright & Admin Link */}
         <div className="mt-12 pt-8 border-t border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] text-slate-500">
-          <p>© {new Date().getFullYear()} Bharat Bus Service In Zirakpur (Bharat Bus Service Zirakpur). All rights reserved.</p>
-          <p>Chandigarh • Zirakpur • Mohali • Panchkula • IXC Airport Pickup</p>
+          <p>© {new Date().getFullYear()} {currentCompany.name}. All rights reserved.</p>
+          <div className="flex items-center gap-4">
+            <p>Chandigarh • Zirakpur • Mohali • Panchkula</p>
+            <a
+              href="#/admin"
+              className="text-slate-400 hover:text-amber-400 transition flex items-center gap-1 font-semibold"
+            >
+              <Lock className="w-3 h-3 text-amber-400" />
+              <span>Admin Portal</span>
+            </a>
+          </div>
           <button
             onClick={scrollToTop}
             className="p-2 rounded-lg bg-slate-800 text-amber-400 hover:bg-slate-700 transition flex items-center gap-1"

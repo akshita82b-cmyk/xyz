@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { Users, Check, Info, ArrowRight, Zap, ShieldCheck, ExternalLink } from 'lucide-react';
-import { FLEET_CATALOG } from '../data/travelData';
+import { useTravelData } from '../context/TravelDataContext';
+import { FLEET_CATALOG as DEFAULT_FLEET } from '../data/travelData';
 
 export default function FleetPage({ onSelectVehicle, onViewDetail }) {
+  const { fleet } = useTravelData();
+  const allFleet = fleet || DEFAULT_FLEET;
   const [filter, setFilter] = useState('all');
 
   const categories = [
@@ -14,8 +17,8 @@ export default function FleetPage({ onSelectVehicle, onViewDetail }) {
   ];
 
   const filteredFleet = filter === 'all'
-    ? FLEET_CATALOG
-    : FLEET_CATALOG.filter(f => f.category === filter);
+    ? allFleet
+    : allFleet.filter(f => f.category === filter);
 
   return (
     <div className="bg-slate-50 text-slate-900 min-h-screen py-12">

@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Clock, MapPin, CheckCircle, ShieldCheck, Phone, MessageCircle, Calendar, Users, X } from 'lucide-react';
-import { TOUR_PACKAGES, COMPANY_INFO } from '../data/travelData';
+import { useTravelData } from '../context/TravelDataContext';
+import { TOUR_PACKAGES as DEFAULT_PACKAGES, COMPANY_INFO as DEFAULT_COMPANY } from '../data/travelData';
 
 export default function TourDetailPage({ packageId, onBack, onOpenBooking }) {
-  const tour = TOUR_PACKAGES.find(p => p.id === packageId) || TOUR_PACKAGES[0];
+  const { packages, companyInfo } = useTravelData();
+  const allPackages = packages || DEFAULT_PACKAGES;
+  const currentCompany = companyInfo || DEFAULT_COMPANY;
+  const tour = allPackages.find(p => p.id === packageId) || allPackages[0];
 
   const [travelDate, setTravelDate] = useState('');
   const [passengers, setPassengers] = useState('12');
@@ -12,8 +16,8 @@ export default function TourDetailPage({ packageId, onBack, onOpenBooking }) {
 
   const handleBookingSubmit = (e) => {
     e.preventDefault();
-    const text = `Hi Bharat Bus Service In Zirakpur,\nI want to book from the Tour Package Detail Page:\n\n• Tour Package: ${tour.title} (${tour.duration})\n• Destinations: ${tour.destinations}\n• Name: ${name}\n• Phone: ${phone}\n• Travel Date: ${travelDate}\n• Passengers: ${passengers}\n\nPlease share booking confirmation details!`;
-    window.open(`https://wa.me/${COMPANY_INFO.phoneRaw}?text=${encodeURIComponent(text)}`, '_blank');
+    const text = `Hi ${currentCompany.name},\nI want to book from the Tour Package Detail Page:\n\n• Tour Package: ${tour.title} (${tour.duration})\n• Destinations: ${tour.destinations}\n• Name: ${name}\n• Phone: ${phone}\n• Travel Date: ${travelDate}\n• Passengers: ${passengers}\n\nPlease share booking confirmation details!`;
+    window.open(`https://wa.me/${currentCompany.phoneRaw}?text=${encodeURIComponent(text)}`, '_blank');
   };
 
   return (

@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 import { Calculator, MapPin, Navigation, Calendar, ShieldCheck, MessageCircle, AlertCircle } from 'lucide-react';
-import { FLEET_CATALOG, POPULAR_ROUTES, COMPANY_INFO } from '../data/travelData';
+import { useTravelData } from '../context/TravelDataContext';
+import { FLEET_CATALOG as DEFAULT_FLEET, POPULAR_ROUTES, COMPANY_INFO as DEFAULT_COMPANY } from '../data/travelData';
 
 export default function FareCalculator({ onOpenBooking }) {
+  const { fleet, companyInfo } = useTravelData();
+  const allFleet = fleet || DEFAULT_FLEET;
+  const currentCompany = companyInfo || DEFAULT_COMPANY;
+
   const [selectedVehicleId, setSelectedVehicleId] = useState('12-seater');
   const [selectedRouteIdx, setSelectedRouteIdx] = useState('1'); // Manali default
   const [customKm, setCustomKm] = useState('');
   const [tripDays, setTripDays] = useState(4);
 
   // Selected vehicle object
-  const currentVehicle = FLEET_CATALOG.find(f => f.id === selectedVehicleId) || FLEET_CATALOG[1];
+  const currentVehicle = allFleet.find(f => f.id === selectedVehicleId) || allFleet[1] || allFleet[0];
 
   // Route KM calculation
   let distanceKm = 0;
@@ -24,7 +29,7 @@ export default function FareCalculator({ onOpenBooking }) {
   }
 
   // Minimum KM calculation (250 KM per day minimum for outstation)
-  const minBillingKm = tripDays * COMPANY_INFO.minDailyKm;
+  const minBillingKm = tripDays * (currentCompany.minDailyKm || 250);
   const billedKm = Math.max(distanceKm, minBillingKm);
 
   // Cost breakdowns
@@ -78,7 +83,7 @@ export default function FareCalculator({ onOpenBooking }) {
                   onChange={(e) => setSelectedVehicleId(e.target.value)}
                   className="w-full bg-slate-50 text-slate-900 border border-slate-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-500 font-medium"
                 >
-                  {FLEET_CATALOG.map((f) => (
+                  {allFleet.map((f) => (
                     <option key={f.id} value={f.id}>
                       {f.name} — {f.ratePerKm}/KM (Min {f.minKmPerDay} KM/day)
                     </option>

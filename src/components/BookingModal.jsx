@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { X, Send, ShieldCheck, Phone, MessageCircle, Calendar, MapPin, Users, Check } from 'lucide-react';
-import { FLEET_CATALOG, TOUR_PACKAGES, COMPANY_INFO } from '../data/travelData';
+import { useTravelData } from '../context/TravelDataContext';
+import { FLEET_CATALOG as DEFAULT_FLEET, TOUR_PACKAGES as DEFAULT_PACKAGES, COMPANY_INFO as DEFAULT_COMPANY } from '../data/travelData';
 
 export default function BookingModal({ isOpen, onClose, initialVehicle, initialPackage, initialSearch }) {
-  const [vehicleId, setVehicleId] = useState(initialVehicle ? initialVehicle.id : '12-seater');
+  const { fleet, packages, companyInfo } = useTravelData();
+  const allFleet = fleet || DEFAULT_FLEET;
+  const allPackages = packages || DEFAULT_PACKAGES;
+  const currentCompany = companyInfo || DEFAULT_COMPANY;
+
+  const [vehicleId, setVehicleId] = useState(initialVehicle ? initialVehicle.id : (allFleet[1]?.id || allFleet[0]?.id || '12-seater'));
   const [packageId, setPackageId] = useState(initialPackage ? initialPackage.id : '');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -27,15 +33,15 @@ export default function BookingModal({ isOpen, onClose, initialVehicle, initialP
 
   if (!isOpen) return null;
 
-  const selectedVehicle = FLEET_CATALOG.find(f => f.id === vehicleId) || FLEET_CATALOG[1];
-  const selectedPackage = TOUR_PACKAGES.find(p => p.id === packageId);
+  const selectedVehicle = allFleet.find(f => f.id === vehicleId) || allFleet[1] || allFleet[0];
+  const selectedPackage = allPackages.find(p => p.id === packageId);
 
   const handleBookingSubmit = (e) => {
     e.preventDefault();
     const pkgText = selectedPackage ? `\n• Tour Package: ${selectedPackage.title}` : '';
-    const text = `Hi Bharat Bus Service In Zirakpur,\nI want to confirm a booking reservation:\n\n• Name: ${name}\n• Phone: ${phone}\n• Vehicle: ${selectedVehicle.name} (${selectedVehicle.ratePerKm}/KM)\n• Pickup Location: ${pickupCity}\n• Destination: ${destination}${pkgText}\n• Travel Date: ${pickupDate}\n• Duration: ${days} Days\n• Passengers: ${passengers}\n\nPlease share final booking confirmation & advance payment details!`;
+    const text = `Hi ${currentCompany.name},\nI want to confirm a booking reservation:\n\n• Name: ${name}\n• Phone: ${phone}\n• Vehicle: ${selectedVehicle.name} (${selectedVehicle.ratePerKm}/KM)\n• Pickup Location: ${pickupCity}\n• Destination: ${destination}${pkgText}\n• Travel Date: ${pickupDate}\n• Duration: ${days} Days\n• Passengers: ${passengers}\n\nPlease share final booking confirmation & advance payment details!`;
     
-    window.open(`https://wa.me/${COMPANY_INFO.phoneRaw}?text=${encodeURIComponent(text)}`, '_blank');
+    window.open(`https://wa.me/${currentCompany.phoneRaw}?text=${encodeURIComponent(text)}`, '_blank');
     onClose();
   };
 
@@ -72,7 +78,7 @@ export default function BookingModal({ isOpen, onClose, initialVehicle, initialP
               onChange={(e) => setVehicleId(e.target.value)}
               className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-500 text-slate-900 font-medium"
             >
-              {FLEET_CATALOG.map((f) => (
+              {allFleet.map((f) => (
                 <option key={f.id} value={f.id}>
                   {f.name} ({f.ratePerKm}/KM)
                 </option>
@@ -180,7 +186,7 @@ export default function BookingModal({ isOpen, onClose, initialVehicle, initialP
             className="w-full py-4 bg-amber-500 hover:bg-amber-600 text-slate-950 font-black rounded-xl text-sm shadow-lg flex items-center justify-center gap-2 transition"
           >
             <MessageCircle className="w-5 h-5 fill-current text-slate-950" />
-            <span>Confirm Booking via WhatsApp (+91 9814276846)</span>
+            <span>Confirm Booking via WhatsApp ({currentCompany.phone})</span>
           </button>
         </form>
 
