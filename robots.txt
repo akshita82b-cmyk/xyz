@@ -1,0 +1,24 @@
+# robots.txt for https://bharattravelschandigarh.com
+# Bharat Bus Service In Zirakpur - Official Site Crawl Rules
+
+User-agent: *
+Allow: /
+
+# AI Crawlers & LLM Search Engine Permissions
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+# Sitemap Location
+Sitemap: https://bharattravelschandigarh.com/sitemap.xml
